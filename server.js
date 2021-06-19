@@ -3,6 +3,7 @@ const express = require('express');
 //create express app
 const app = express();
 const PORT = 3000;
+const veggies = require('./models/veggie');
 
 // Database setup
 
@@ -17,7 +18,7 @@ app.use((req, res, next) =>{
   next()
 });
 
-app.use(express.urlencoded({extended: true}));  //use for body parser?
+app.use(express.urlencoded({extended: true}));  //body parser?
 
 /*****************
 Mount INDUCES Routes
@@ -27,8 +28,12 @@ Index
 */
 //define a "root" route directly on app. This is callback function AKA route handler
 app.get('/', (req, res) => {
-  res.send("This is veggie app")
+  res.send('<h1>This is veggie App!</h1><a href="/veggies/">Veggies Page</a>');
 })
+
+app.get('/veggies', (req, res) => {
+  res.render('Index', {veggies: veggies});
+});
 /*
 New         //Just renders the page. SHows the form to input data
 */
@@ -45,6 +50,15 @@ Update
 /*
 Create      //Recieves the info and pushes the info. Action that actually posts the data to server
 */
+app.post('/veggies', (req, res) => {
+  if(req.body.likeToEat === 'on'){ //if user checks, req.body.likeToEat is set to 'on'
+      req.body.likeToEat = true;
+    } else{                         //if not checked, req.body.likeToEat is undefinded
+      req.body.likeToEat = false;
+    }
+  veggies.push(req.body)
+  res.redirect('/veggies')
+})
 
 /*
 Edit
@@ -52,6 +66,11 @@ Edit
 /*
 Show
 */
+app.get('/veggies/:indexOfVeggiesArray', (req, res) => {
+  res.render('Show', {
+    veggie: veggies[req.params.indexOfVeggiesArray]
+  })
+})
 
 
 

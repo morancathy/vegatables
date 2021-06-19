@@ -32,6 +32,9 @@ app.get('/', (req, res) => {
 /*
 New         //Just renders the page. SHows the form to input data
 */
+app.get('/veggies/new', (req, res) => {
+  res.render('New');
+});
 
 /*
 Delete

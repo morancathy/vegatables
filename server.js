@@ -4,7 +4,7 @@ require('dotenv').config();
 const express = require('express');
 //create express app
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const Veggie = require('./models/veggie');
 
 // Database setup

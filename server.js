@@ -50,6 +50,11 @@ app.get('/veggies/seed', (req, res) => {
       name: 'sqash',
       color: 'white',
       likeToEat: false
+    },
+    {
+      name: 'newVeggie',
+      color: 'white',
+      likeToEat: false
     }
   ], (err, data) => {
     res.redirect('/veggies');

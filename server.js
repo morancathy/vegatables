@@ -2,6 +2,7 @@
 require('dotenv').config();
 //load express
 const express = require('express');
+const methodOverride = require('method-override');
 //create express app
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,12 +27,23 @@ app.set('view engine', 'jsx');
 app.engine('jsx', require('express-react-views').createEngine());
 
 //mount middleware (app.use)
-app.use((req, res, next) =>{
-  console.log('HEEEEYYYYY I am middleware, running before all routes');
+app.use((req, res, next) => {
+  res.locals.data = {}
   next()
 });
 
 app.use(express.urlencoded({extended: true}));  //body parser?
+app.use(methodOverride('_method'));
+app.use(express.static('public'));
+
+app.use('/veggies', require('./controllers/routeController.js'));
+
+//test dummy code used to test cURL
+app.post('/products', (req, res) => {
+  console.log('Red.body is: ', req.body);
+  res.send(req.body)
+})
+
 
 //seed Route
 app.get('/veggies/seed', (req, res) => {
@@ -75,19 +87,19 @@ app.get('/', (req, res) => {
   res.send('<h1>This is the Veggie App!</h1><a href="/veggies/">Veggies Page</a>');
 })
 
-app.get('/veggies', (req, res) => {
-  Veggie.find({}, (error, allVeggies) => {
-    res.render('Index', {
-      veggies: allVeggies
-    })
-  })
-});
+// app.get('/veggies', (req, res) => {
+//   Veggie.find({}, (error, allVeggies) => {
+//     res.render('Index', {
+//       veggies: allVeggies
+//     })
+//   })
+// });
 /*
 New         //Just renders the page. SHows the form to input data
 */
-app.get('/veggies/new', (req, res) => {
-  res.render('New');
-});
+// app.get('/veggies/new', (req, res) => {
+//   res.render('New');
+// });
 
 /*
 Delete
@@ -98,25 +110,25 @@ Update
 /*
 Create      //Recieves the info and pushes the info. Action that actually posts the data to server
 */
-app.post('/veggies', (req, res) => {
-  if(req.body.likeToEat === 'on'){ //if user checks, req.body.likeToEat is set to 'on'
-      req.body.likeToEat = true;
-    } else{                         //if not checked, req.body.likeToEat is undefinded
-      req.body.likeToEat = false;
-    }
-  Veggie.create(req.body, (err, createdVeggie) => {
-    if(err) {
-      res.status(404).send({
-        msg: err.message
-      })
-    } else{
-      console.log(createdVeggie);
-      res.redirect('/veggies');
-    }
-  })
+// app.post('/veggies', (req, res) => {
+//   if(req.body.likeToEat === 'on'){
+//       req.body.likeToEat = true;
+//     } else{
+//       req.body.likeToEat = false;
+//     }
+//   Veggie.create(req.body, (err, createdVeggie) => {
+//     if(err) {
+//       res.status(404).send({
+//         msg: err.message
+//       })
+//     } else{
+//       console.log(createdVeggie);
+//       res.redirect('/veggies');
+//     }
+//   })
   // Veggies.push(req.body)
   // res.redirect('/veggies')
-})
+// })
 
 /*
 Edit
@@ -124,13 +136,13 @@ Edit
 /*
 Show
 */
-app.get('/veggies/:indexOfVeggiesArray', (req, res) => {
-  Veggie.findById(req.params.indexOfVeggiesArray, (err, foundVeg) => {
-    res.render('Show', {
-      veggie: foundVeg,
-    })
-  });
-});
+// app.get('/veggies/:indexOfVeggiesArray', (req, res) => {
+//   Veggie.findById(req.params.indexOfVeggiesArray, (err, foundVeg) => {
+//     res.render('Show', {
+//       veggie: foundVeg,
+//     })
+//   });
+// });
 
 
 

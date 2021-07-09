@@ -1,16 +1,17 @@
 const React = require('react');
+const DefaultLayout = require('./layouts/Default')
 
 class Index extends React.Component {
   render(){
     const {veggies} = this.props;
     return(
-      <div>
+      <DefaultLayout title={"Fruits Index Page"}>
         <h1>The Vegatable Index Page</h1>
         <nav>
           <a href="/veggies/new">Create a New Vegetable</a>
         </nav>
         <ul>
-          {veggies.map((veggie, i) => {
+          {veggies.map((product, i) => {
             return(
               <li>
                 The {' '}
@@ -23,7 +24,7 @@ class Index extends React.Component {
             )
           })}
         </ul>
-      </div>
+      </DefaultLayout>
     )
   }
 }
